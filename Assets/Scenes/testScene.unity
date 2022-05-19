@@ -473,14 +473,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c08d6a47ca7504f909f04e8b0d8a4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Signals:
-  - Direction: 1
-    Name: Signal_0
-    Min: 0
-    Max: 1
-    Value: 0
-  - Direction: 1
-    Name: Signal_1
-    Min: 0
-    Max: 1
-    Value: 0
+  Signals: []

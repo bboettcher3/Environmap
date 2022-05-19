@@ -26,7 +26,8 @@ public class MapperDevice : MonoBehaviour {
         public float Value;
     }
 
-    public List<MapperSignal> Signals = new List<MapperSignal>();
+    public string deviceName = "UnityDevice";
+    public List<MapperSignal> signals = new List<MapperSignal>();
     
     // Start is called before the first frame update
     void Start()
@@ -59,14 +60,17 @@ public class MapperDevice : MonoBehaviour {
 
 [CustomEditor(typeof(MapperDevice))]
 public class MapperDeviceEditor : Editor {
-    private ReorderableList list;
+    public SerializedProperty deviceName;
+    private ReorderableList signalList;
     
     private void OnEnable() {
-        list = new ReorderableList(serializedObject, 
-                serializedObject.FindProperty("Signals"), 
+        deviceName = serializedObject.FindProperty("deviceName");
+
+        signalList = new ReorderableList(serializedObject, 
+                serializedObject.FindProperty("signals"), 
                 true, true, true, true);
 
-        list.onAddCallback = (ReorderableList l) => {
+        signalList.onAddCallback = (ReorderableList l) => {
             var index = l.serializedProperty.arraySize;
             l.serializedProperty.arraySize++;
             l.index = index;
@@ -77,8 +81,8 @@ public class MapperDeviceEditor : Editor {
             element.FindPropertyRelative("Max").floatValue = 1;
         };
 
-        list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
-            var element = list.serializedProperty.GetArrayElementAtIndex(index);
+        signalList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+            var element = signalList.serializedProperty.GetArrayElementAtIndex(index);
             rect.y += 2;
             var itemHeight = EditorGUIUtility.singleLineHeight;
             EditorGUI.LabelField(new Rect(rect.x, rect.y, 80, EditorGUIUtility.singleLineHeight),
@@ -103,18 +107,19 @@ public class MapperDeviceEditor : Editor {
                     element.FindPropertyRelative("Max"), GUIContent.none);
         };
 
-        list.elementHeightCallback = (index) => {
+        signalList.elementHeightCallback = (index) => {
             return EditorGUIUtility.singleLineHeight * 2 + 10;
         };
 
-        list.drawHeaderCallback = (Rect rect) => {
-            EditorGUI.LabelField(rect, "MapperSignals");
+        signalList.drawHeaderCallback = (Rect rect) => {
+            EditorGUI.LabelField(rect, "Signals");
         };
     }
     
     public override void OnInspectorGUI() {
         serializedObject.Update();
-        list.DoLayoutList();
+        EditorGUILayout.PropertyField(deviceName);
+        signalList.DoLayoutList();
         serializedObject.ApplyModifiedProperties();
     }
 }
